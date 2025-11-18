@@ -3,6 +3,7 @@ package com.afgicafe.ecommerce.controller;
 import com.afgicafe.ecommerce.common.response.ApiResponse;
 import com.afgicafe.ecommerce.dto.permission.PermissionRequest;
 import com.afgicafe.ecommerce.entity.Permission;
+import com.afgicafe.ecommerce.entity.Role;
 import com.afgicafe.ecommerce.service.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,5 +46,17 @@ public class PermissionController {
         return ResponseEntity
                 .created(URI.create(String.format("/api/vi/permissions/%s", permission.getId())))
                 .body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Permission>> show(@PathVariable UUID id){
+        var response = ApiResponse.success(
+                HttpStatus.OK,
+                "Permission retrieved successfully",
+                "permission",
+                service.getPermission(id)
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

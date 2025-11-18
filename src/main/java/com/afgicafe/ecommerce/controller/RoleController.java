@@ -49,6 +49,18 @@ public class RoleController {
                 .body(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Role>> show(@PathVariable UUID id){
+        var response = ApiResponse.success(
+                HttpStatus.OK,
+                "Role retrieved successfully",
+                "role",
+                service.getRole(id)
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Role>> update(@Valid @RequestBody RoleRequest request, @PathVariable UUID id){
         Role role = service.updateRole(request, id);

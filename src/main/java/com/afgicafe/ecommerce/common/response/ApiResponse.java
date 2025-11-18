@@ -10,11 +10,11 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "time_stamp",
         "status",
         "status_code",
         "message",
-        "data",
-        "time_stamp",
+        "data"
 })
 public class ApiResponse<T> {
     @Getter

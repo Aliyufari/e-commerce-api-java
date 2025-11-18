@@ -2,6 +2,7 @@ package com.afgicafe.ecommerce.common.exception;
 
 import com.afgicafe.ecommerce.common.response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,4 +33,16 @@ public class ApplicationException {
                 errors
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ApiResponse<String> handleUnreadable(HttpMessageNotReadableException ex) {
+        return ApiResponse.error(
+                HttpStatus.BAD_REQUEST,
+                "Invalid body",
+                "error",
+                ex.getMessage()
+        );
+    }
+
 }
