@@ -1,7 +1,7 @@
 package com.afgicafe.ecommerce.mapper;
 
-import com.afgicafe.ecommerce.dto.response.PermissionResponse;
-import com.afgicafe.ecommerce.entity.Permission;
+import com.afgicafe.ecommerce.dto.response.RoleResponse;
+import com.afgicafe.ecommerce.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -9,6 +9,6 @@ import org.mapstruct.ReportingPolicy;
         componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE
 )
-public interface PermissionMapper {
-    PermissionResponse toResponse (Permission permission);
+public interface RoleMapper {
+    RoleResponse toResponse(Role role);
 }

@@ -1,19 +1,18 @@
 package com.afgicafe.ecommerce.service;
 
-import com.afgicafe.ecommerce.dto.request.UserRequest;
 import com.afgicafe.ecommerce.entity.User;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    List<User> getUsers();
-
-    User createUser(UserRequest request);
-
-    User getUser(UUID id);
-
-    User updateUser(UUID id, UserRequest request);
-
-    void deleteUser(UUID id);
+//    List<User> getUsers();
+//
+//    User createUser(UserRequest request);
+//
+//    User getUser(UUID id);
+//
+//    User updateUser(UUID id, UserRequest request);
+//
+//    void deleteUser(UUID id);
 }

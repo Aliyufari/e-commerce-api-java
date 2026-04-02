@@ -1,17 +1,9 @@
 package com.afgicafe.ecommerce.service;
 
-import com.afgicafe.ecommerce.dto.request.AssignPermissionsRequest;
-import com.afgicafe.ecommerce.dto.request.RoleRequest;
-import com.afgicafe.ecommerce.entity.Role;
-
-import java.util.Set;
-import java.util.UUID;
+import com.afgicafe.ecommerce.dto.response.RoleResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface RoleService {
-    Set<Role> getRoles();
-    Role createRole(RoleRequest request);
-    Role getRole(UUID id);
-    Role updateRole(RoleRequest request, UUID id);
-    void deleteRole(UUID id);
-    Role assignPermissionsToRole(AssignPermissionsRequest request, UUID id);
+    Page<RoleResponse> getRoles(Pageable pageable);
 }

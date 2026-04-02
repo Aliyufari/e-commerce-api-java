@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum Permission {
     USER_VIEW("user:view"),
     USER_CREATE("user:create"),
-    USER_DELETE("user:create"),
-    USER_UPDATE("user:update");
+    USER_UPDATE("user:update"),
+    USER_DELETE("user:create");
 
     private final String value;
 
