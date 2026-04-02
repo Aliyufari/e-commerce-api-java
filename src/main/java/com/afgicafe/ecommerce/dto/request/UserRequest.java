@@ -1,4 +1,4 @@
-package com.afgicafe.ecommerce.dto.user;
+package com.afgicafe.ecommerce.dto.request;
 
 import com.afgicafe.ecommerce.enums.Gender;
 import jakarta.validation.constraints.Email;

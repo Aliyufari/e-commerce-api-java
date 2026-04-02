@@ -1,4 +1,4 @@
-package com.afgicafe.ecommerce.common.response;
+package com.afgicafe.ecommerce.helper;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;

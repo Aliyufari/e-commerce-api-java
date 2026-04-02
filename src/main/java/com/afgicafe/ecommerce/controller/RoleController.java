@@ -1,8 +1,8 @@
 package com.afgicafe.ecommerce.controller;
 
-import com.afgicafe.ecommerce.common.response.ApiResponse;
-import com.afgicafe.ecommerce.dto.role.AssignPermissionsRequest;
-import com.afgicafe.ecommerce.dto.role.RoleRequest;
+import com.afgicafe.ecommerce.helper.ApiResponse;
+import com.afgicafe.ecommerce.dto.request.AssignPermissionsRequest;
+import com.afgicafe.ecommerce.dto.request.RoleRequest;
 import com.afgicafe.ecommerce.entity.Role;
 import com.afgicafe.ecommerce.service.RoleService;
 import jakarta.validation.Valid;

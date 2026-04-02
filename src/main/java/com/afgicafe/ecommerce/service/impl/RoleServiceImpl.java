@@ -1,8 +1,8 @@
 package com.afgicafe.ecommerce.service.impl;
 
-import com.afgicafe.ecommerce.common.exception.ResourceNotFoundException;
-import com.afgicafe.ecommerce.dto.role.AssignPermissionsRequest;
-import com.afgicafe.ecommerce.dto.role.RoleRequest;
+import com.afgicafe.ecommerce.exception.ResourceNotFoundException;
+import com.afgicafe.ecommerce.dto.request.AssignPermissionsRequest;
+import com.afgicafe.ecommerce.dto.request.RoleRequest;
 import com.afgicafe.ecommerce.entity.Role;
 import com.afgicafe.ecommerce.repository.PermissionRepository;
 import com.afgicafe.ecommerce.repository.RoleRepository;

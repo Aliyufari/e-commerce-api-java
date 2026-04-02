@@ -1,4 +1,4 @@
-package com.afgicafe.ecommerce.common.exception;
+package com.afgicafe.ecommerce.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message){

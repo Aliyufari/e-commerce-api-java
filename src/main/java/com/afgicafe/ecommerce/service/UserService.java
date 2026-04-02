@@ -1,6 +1,6 @@
 package com.afgicafe.ecommerce.service;
 
-import com.afgicafe.ecommerce.dto.user.UserRequest;
+import com.afgicafe.ecommerce.dto.request.UserRequest;
 import com.afgicafe.ecommerce.entity.User;
 
 import java.util.List;

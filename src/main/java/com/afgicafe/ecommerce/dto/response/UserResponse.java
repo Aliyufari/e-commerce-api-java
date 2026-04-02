@@ -1,4 +1,4 @@
-package com.afgicafe.ecommerce.dto.user;
+package com.afgicafe.ecommerce.dto.response;
 
 import com.afgicafe.ecommerce.entity.Role;
 import com.afgicafe.ecommerce.enums.Gender;

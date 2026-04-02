@@ -12,9 +12,10 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity{
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "permission_role",
             joinColumns = @JoinColumn(name = "role_id"),

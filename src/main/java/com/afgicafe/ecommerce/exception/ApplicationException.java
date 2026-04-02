@@ -1,6 +1,6 @@
-package com.afgicafe.ecommerce.common.exception;
+package com.afgicafe.ecommerce.exception;
 
-import com.afgicafe.ecommerce.common.response.ApiResponse;
+import com.afgicafe.ecommerce.helper.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

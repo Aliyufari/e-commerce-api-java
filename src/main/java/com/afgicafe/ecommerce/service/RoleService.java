@@ -1,7 +1,7 @@
 package com.afgicafe.ecommerce.service;
 
-import com.afgicafe.ecommerce.dto.role.AssignPermissionsRequest;
-import com.afgicafe.ecommerce.dto.role.RoleRequest;
+import com.afgicafe.ecommerce.dto.request.AssignPermissionsRequest;
+import com.afgicafe.ecommerce.dto.request.RoleRequest;
 import com.afgicafe.ecommerce.entity.Role;
 
 import java.util.Set;

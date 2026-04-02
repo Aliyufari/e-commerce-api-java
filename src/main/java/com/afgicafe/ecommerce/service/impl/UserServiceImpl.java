@@ -1,6 +1,6 @@
 package com.afgicafe.ecommerce.service.impl;
 
-import com.afgicafe.ecommerce.dto.user.UserRequest;
+import com.afgicafe.ecommerce.dto.request.UserRequest;
 import com.afgicafe.ecommerce.entity.User;
 import com.afgicafe.ecommerce.repository.RoleRepository;
 import com.afgicafe.ecommerce.repository.UserRepository;
