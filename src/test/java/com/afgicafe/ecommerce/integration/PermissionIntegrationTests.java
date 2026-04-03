@@ -35,12 +35,23 @@ class PermissionIntegrationTests {
     PermissionService service;
 
     @Test
-    void shouldReturnPaginatedPermissionsFromDb() throws Exception {
+    void shouldReturnPaginatedPermissions() throws Exception {
         List<PermissionResponse> permissions = List.of(
-                new PermissionResponse(null, Permission.USER_VIEW.getValue(), null, null, null, null),
-                new PermissionResponse(null, Permission.USER_CREATE.getValue(), null, null, null, null),
-                new PermissionResponse(null, Permission.USER_UPDATE.getValue(), null, null, null, null),
-                new PermissionResponse(null, Permission.USER_DELETE.getValue(), null, null, null, null)
+                PermissionResponse.builder()
+                        .name(Permission.USER_VIEW.getValue())
+                        .build(),
+
+                PermissionResponse.builder()
+                        .name(Permission.USER_CREATE.getValue())
+                        .build(),
+
+                PermissionResponse.builder()
+                        .name(Permission.USER_UPDATE.getValue())
+                        .build(),
+
+                PermissionResponse.builder()
+                        .name(Permission.USER_DELETE.getValue())
+                        .build()
         );
 
         var pageContent = permissions.subList(0, 2);

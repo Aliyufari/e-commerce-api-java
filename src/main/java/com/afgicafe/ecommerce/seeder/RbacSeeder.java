@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,10 +36,10 @@ public class RbacSeeder implements CommandLineRunner {
                         return roleRepository.save(r);
                     });
 
-            Set<com.afgicafe.ecommerce.entity.Permission> permissions = role.getPermissions()
+            List<com.afgicafe.ecommerce.entity.Permission> permissions = role.getPermissions()
                     .stream()
                     .map(p -> permissionRepository.findByName(p.getValue())
-                    .orElseThrow()).collect(Collectors.toSet());
+                    .orElseThrow()).collect(Collectors.toList());
 
             rol.setPermissions(permissions);
             roleRepository.save(rol);

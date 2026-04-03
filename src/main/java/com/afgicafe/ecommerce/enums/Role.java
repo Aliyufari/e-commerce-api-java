@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public enum Role {
     ADMIN(
-            Set.of(
+            List.of(
                     Permission.USER_VIEW,
                     Permission.USER_CREATE,
                     Permission.USER_DELETE,
@@ -18,9 +18,9 @@ public enum Role {
             )
     ),
 
-    SALE(Collections.emptySet()),
+    SALE(List.of()),
 
-    CUSTOMER(Collections.emptySet());
+    CUSTOMER(List.of());
 
-    private final Set<Permission> permissions;
+    private final List<Permission> permissions;
 }
