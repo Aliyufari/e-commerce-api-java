@@ -1,7 +1,11 @@
 package com.afgicafe.ecommerce.exception;
 
 import com.afgicafe.ecommerce.helper.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,16 +19,28 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ApplicationException {
+
+    private final ObjectMapper objectMapper;
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<List<Map<String, String>>> handleValidation(MethodArgumentNotValidException exception) {
-        List<Map<String, String>> errors = new ArrayList<>();
+    public ApiResponse<Map<String, List<String>>> handleValidation(MethodArgumentNotValidException exception) {
+
+        Map<String, List<String>> errors = new HashMap<>();
 
         exception.getBindingResult().getFieldErrors().forEach(error -> {
-            Map<String, String> err = new HashMap<>();
-            err.put(error.getField(), error.getDefaultMessage());
-            errors.add(err);
+            PropertyNamingStrategies.SnakeCaseStrategy strategy =
+                    new PropertyNamingStrategies.SnakeCaseStrategy();
+
+            String field = strategy.translate(error.getField());
+
+
+            String message = error.getDefaultMessage();
+
+            errors.computeIfAbsent(field, key -> new ArrayList<>())
+                    .add(message);
         });
 
         return ApiResponse.error(
@@ -33,6 +49,13 @@ public class ApplicationException {
                 "errors",
                 errors
         );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<?>> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

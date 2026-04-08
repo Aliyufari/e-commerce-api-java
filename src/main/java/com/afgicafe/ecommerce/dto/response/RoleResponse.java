@@ -15,7 +15,7 @@ public record RoleResponse(
 
         String name,
 
-        List<PermissionResponse> permissions,
+        List<PermissionSimpleResponse> permissions,
 
         @JsonProperty("created_at")
         LocalDateTime createdAt,

@@ -4,7 +4,6 @@ import com.afgicafe.ecommerce.controller.PermissionController;
 import com.afgicafe.ecommerce.dto.response.PermissionResponse;
 import com.afgicafe.ecommerce.enums.Permission;
 import com.afgicafe.ecommerce.service.PermissionService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PermissionController.class)
 @AutoConfigureMockMvc
-class PermissionIntegrationTests {
+class PermissionTests {
 
     @Autowired
     MockMvc mockMvc;

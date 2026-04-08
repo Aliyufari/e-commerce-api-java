@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(RoleController.class)
 @AutoConfigureMockMvc
-public class RoleIntegrationTests {
+public class RoleTests {
     @Autowired
     MockMvc mockMvc;
 
@@ -122,7 +122,7 @@ public class RoleIntegrationTests {
     }
 
     @Test
-    void shouldReturnRoleWhenParseValidId() throws Exception {
+    void shouldReturnRoleWhenProvideValidId() throws Exception {
         RoleResponse role = RoleResponse.builder()
                 .id(UUID.randomUUID())
                 .name(String.valueOf(Role.ADMIN))
@@ -138,7 +138,7 @@ public class RoleIntegrationTests {
     }
 
     @Test
-    void shouldReturnNotFoundWhenParseInvalidId() throws Exception {
+    void shouldReturnNotFoundWhenProvideInvalidId() throws Exception {
         UUID id = UUID.randomUUID();
 
         when(service.getRole(id)).thenThrow(new ResourceNotFoundException("Not Found"));

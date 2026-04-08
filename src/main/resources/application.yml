@@ -1,5 +1,17 @@
 spring:
   application:
     name: "e-commerce API"
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enable: true
+      path: /h2-console
   jackson:
     property-naming-strategy: SNAKE_CASE
