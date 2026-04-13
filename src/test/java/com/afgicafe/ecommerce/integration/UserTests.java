@@ -1,223 +1,131 @@
 package com.afgicafe.ecommerce.integration;
 
-import com.afgicafe.ecommerce.controller.UserController;
 import com.afgicafe.ecommerce.dto.request.StoreUserRequest;
 import com.afgicafe.ecommerce.dto.request.UpdateUserRequest;
-import com.afgicafe.ecommerce.dto.response.RoleResponse;
-import com.afgicafe.ecommerce.dto.response.UserResponse;
 import com.afgicafe.ecommerce.enums.Gender;
-import com.afgicafe.ecommerce.enums.Role;
-import com.afgicafe.ecommerce.exception.ResourceNotFoundException;
-import com.afgicafe.ecommerce.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-@AutoConfigureMockMvc
-public class UserTests {
+@Transactional
+public class UserTests extends AuthenticatedIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+    private String toJson(String name, String email, UUID roleId) throws Exception {
+        StoreUserRequest req = StoreUserRequest.builder()
+                .name(name)
+                .email(email)
+                .password("password123")
+                .gender(Gender.MALE)
+                .roleId(roleId)
+                .dob(LocalDate.parse("2000-01-01"))
+                .build();
 
-    @Autowired
-    ObjectMapper objectMapper;
+        return objectMapper.writeValueAsString(req);
+    }
 
-    @MockBean
-    UserService service;
+    private String createUser(String name, String email) throws Exception {
+        String res = mockMvc.perform(post("/api/v1/users")
+                        .header("Authorization", bearerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(name, email, adminRole.getId())))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        return objectMapper.readTree(res).path("user").path("id").asText();
+    }
 
     @Test
-    void shouldReturnPageableUserWithTheirRoles() throws Exception {
-        List<UserResponse> users = List.of(
-                UserResponse.builder()
-                        .id(UUID.randomUUID())
-                        .name("John Doe")
-                        .email("jd@email.com")
-                        .dob(LocalDate.now())
-                        .role(
-                                RoleResponse.builder()
-                                        .id(UUID.randomUUID())
-                                        .name(String.valueOf(Role.ADMIN))
-                                        .build()
-                        )
-                        .build(),
+    void shouldReturnUnauthorizedWhenNoTokenProvided() throws Exception {
+        mockMvc.perform(get("/api/v1/users"))
+                .andExpect(status().isUnauthorized());
+    }
 
-                UserResponse.builder()
-                        .id(UUID.randomUUID())
-                        .name("John Smith")
-                        .email("js@email.com")
-                        .dob(LocalDate.now())
-                        .role(
-                                RoleResponse.builder()
-                                        .id(UUID.randomUUID())
-                                        .name(String.valueOf(Role.SALE))
-                                        .build()
-                        )
-                        .build(),
+    @Test
+    void shouldCreateUserSuccessfully() throws Exception {
 
-                UserResponse.builder()
-                        .id(UUID.randomUUID())
-                        .name("John Smith")
-                        .email("js@email.com")
-                        .dob(LocalDate.now())
-                        .role(
-                                RoleResponse.builder()
-                                        .id(UUID.randomUUID())
-                                        .name(String.valueOf(Role.CUSTOMER))
-                                        .build()
-                        )
-                        .build()
-        );
+        mockMvc.perform(post("/api/v1/users")
+                        .header("Authorization", bearerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson("John Doe", "john@email.com", adminRole.getId())))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.user.name").value("John Doe"));
 
-        var pageContent = users.subList(0, 2);
+        assertThat(userRepository.count()).isEqualTo(2);
+    }
 
-        var page = new PageImpl<>(pageContent, PageRequest.of(0, 2), 3);
+    @Test
+    void shouldReturnPageableUsersWithTheirRoles() throws Exception {
 
-        when(service.getUsers(any(Pageable.class))).thenReturn(page);
+        createUser("John Doe", "jd@email.com");
+        createUser("Jane Doe", "jane@email.com");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/users")
+                        .header("Authorization", bearerToken)
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.users.content.length()").value(2))
+                .andExpect(jsonPath("$.users.content.length()").value(3))
                 .andExpect(jsonPath("$.users.total_elements").value(3))
-                .andExpect(jsonPath("$.users.content[0].name").value("John Doe"))
-                .andExpect(jsonPath("$.users.content[1].email").value(users.get(1).email()))
-                .andExpect(jsonPath("$.users.content[0].role.name").value(Role.ADMIN.name()));
+                .andExpect(jsonPath("$.users.pageable.page_number").value(0))
+                .andExpect(jsonPath("$.users.pageable.page_size").value(10));
     }
 
     @Test
-    void shouldCreateUserWhenProvideAValidJsonAndReturnCreatedUserJson() throws Exception {
-        RoleResponse role =RoleResponse.builder()
-                .id(UUID.randomUUID())
-                .name(String.valueOf(Role.ADMIN))
-                .build();
+    void shouldReturnUsersSortedByName() throws Exception {
 
-        StoreUserRequest request = StoreUserRequest.builder()
-                .name("John Doe")
-                .email("john@email.com")
-                .gender(Gender.MALE)
-                .roleId(role.id())
-                .dob(LocalDate.parse("2000-01-01"))
-                .build();
+        createUser("Zack", "z@email.com");
+        createUser("Adam", "a@email.com");
 
-        String json = objectMapper.writeValueAsString(request);
-
-        UserResponse response = UserResponse.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("john@email.com")
-                .role(role)
-                .dob(LocalDate.parse("2000-01-01"))
-                .build();
-
-        when(service.createUser(any(StoreUserRequest.class)))
-                .thenReturn(response);
-
-        mockMvc.perform(post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("User created successfully"))
-                .andExpect(jsonPath("$.user.name").value("John Doe"))
-                .andExpect(jsonPath("$.user.email").value("john@email.com"))
-                .andExpect(jsonPath("$.user.role.name").value(Role.ADMIN.name()));
-
-        verify(service, times(1))
-                .createUser(any(StoreUserRequest.class));
-    }
-
-    @Test
-    void shouldReturnUserWhenProvideValidId() throws Exception {
-        UserResponse user = UserResponse.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("jd@email.com")
-                .dob(LocalDate.now())
-                .role(
-                        RoleResponse.builder()
-                                .id(UUID.randomUUID())
-                                .name(String.valueOf(Role.ADMIN))
-                                .build()
-                )
-                .build();
-
-        when(service.getUser(any(UUID.class))).thenReturn(user);
-
-        mockMvc.perform(get("/api/v1/users/{id}", user.id())
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/users")
+                        .header("Authorization", bearerToken)
+                        .param("sort", "name,asc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.email").value(user.email()));
+                .andExpect(jsonPath("$.users.content[0].name").value("Adam"));
     }
 
     @Test
-    void shouldReturnNotFoundWhenProvideInvalidId() throws Exception {
-        UUID id = UUID.randomUUID();
+    void shouldUpdateUserSuccessfully() throws Exception {
 
-        when(service.getUser(id)).thenThrow(new ResourceNotFoundException("User not found"));
+        String id = createUser("John Doe", "john@email.com");
 
-        mockMvc.perform(get("/api/v1/users/{id}", id)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void shouldUpdateUserWhenProvideAValidJsonAndReturnCreatedUserJson() throws Exception {
-        RoleResponse role = RoleResponse.builder()
-                .id(UUID.randomUUID())
-                .name(String.valueOf(Role.ADMIN))
-                .build();
-
-        UpdateUserRequest request = UpdateUserRequest.builder()
-                .name("John Doe")
-                .email("john@email.com")
+        UpdateUserRequest req = UpdateUserRequest.builder()
+                .name("Updated Name")
+                .email("updated@email.com")
                 .gender(Gender.MALE)
-                .roleId(role.id())
+                .roleId(adminRole.getId())
                 .dob(LocalDate.parse("2000-01-01"))
                 .build();
 
-        String json = objectMapper.writeValueAsString(request);
-
-        UserResponse response = UserResponse.builder()
-                .id(UUID.randomUUID())
-                .name("John Doe")
-                .email("john@email.com")
-                .role(role)
-                .dob(LocalDate.parse("2000-01-01"))
-                .build();
-
-        when(service.createUser(any(StoreUserRequest.class)))
-                .thenReturn(response);
-
-        mockMvc.perform(post("/api/v1/users")
+        mockMvc.perform(put("/api/v1/users/{id}", id)
+                        .header("Authorization", bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("User created successfully"))
-                .andExpect(jsonPath("$.user.name").value("John Doe"))
-                .andExpect(jsonPath("$.user.email").value("john@email.com"))
-                .andExpect(jsonPath("$.user.role.name").value(Role.ADMIN.name()));
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk());
 
-        verify(service, times(1))
-                .createUser(any(StoreUserRequest.class));
+        assertThat(userRepository.findById(UUID.fromString(id)))
+                .get()
+                .extracting("name")
+                .isEqualTo("Updated Name");
+    }
+
+    @Test
+    void shouldDeleteUserSuccessfully() throws Exception {
+
+        String id = createUser("John Doe", "john@email.com");
+
+        mockMvc.perform(delete("/api/v1/users/{id}", id)
+                        .header("Authorization", bearerToken))
+                .andExpect(status().isOk());
+
+        assertThat(userRepository.existsById(UUID.fromString(id))).isFalse();
     }
 }

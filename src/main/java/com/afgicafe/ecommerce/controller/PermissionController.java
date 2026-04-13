@@ -3,6 +3,7 @@ package com.afgicafe.ecommerce.controller;
 import com.afgicafe.ecommerce.dto.response.PermissionResponse;
 import com.afgicafe.ecommerce.helper.ApiResponse;
 import com.afgicafe.ecommerce.service.PermissionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/permissions")
+@Tag(name = "Permissions")
 public class PermissionController {
     private final PermissionService service;
 

@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class ApplicationException {
+public class GlobalExceptionHandler {
 
     private final ObjectMapper objectMapper;
 

@@ -224,7 +224,7 @@ Periodic native trim disabled
 OS:
  Windows 11 , 64 bit Build 22621 (10.0.22621.3958)
 OS uptime: 16 days 13:40 hours
-Hyper-V role detected
+Hyper-V roleEnum detected
 
 CPU: total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 142 stepping 12 microcode 0xfa, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, fma, vzeroupper, clflush, clflushopt, hv, rdtscp, f16c
 Processor Information for the first 8 processors :

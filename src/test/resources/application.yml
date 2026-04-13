@@ -5,6 +5,7 @@ application:
       issuer: AFGICAFE
       secret-key: aW5jaXR5eWVzdGVyZGF5bmVzdHBhbnBsYW5ldGJhc2ljcHJvZHVjZWNvbWluZ29uaW5zdGFudGdyZWVud2VzdGV2ZW5zdG9wZGlmZmVyZW5jZXBvZW10ZW50bm90aWNlcmVzdHNpbmtpbmNod2VyZXRpcmVkbHVuZ3N3YW50YmFja3doYWxlY29ybmVyY2Fubm90Y29udHJhc3RuZWNlc3NhcnlldmVyeWJvZHltYWlscnVsZXJyaWdodHN0dWRpZWRkaWZmaWN1bHRyZXBlYXRydWJiZWRicm93bmRyaXZlbmJyaWVmZmxvd3VuZGVyY2xvY2t3b3JsZGh1bmRyZQ==
       expiration: 86400000
+
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
@@ -14,19 +15,16 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: create-drop   # fresh schema every test run
+    database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
-      enable: true
-      path: /h2-console
+      enabled: false          # not needed in tests
   jackson:
     property-naming-strategy: SNAKE_CASE
 
 springdoc:
   api-docs:
-    path: /v3/api-docs
+    enabled: false            # no need to boot swagger in tests
   swagger-ui:
-    path: /swagger-ui.html
-    operationsSorter: method
-    tagSorter: alpha
+    enabled: false

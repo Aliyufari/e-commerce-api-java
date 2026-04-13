@@ -3,6 +3,7 @@ package com.afgicafe.ecommerce.controller;
 import com.afgicafe.ecommerce.dto.response.RoleResponse;
 import com.afgicafe.ecommerce.helper.ApiResponse;
 import com.afgicafe.ecommerce.service.RoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/roles")
+@Tag(name = "Roles")
 public class RoleController {
 
     private final RoleService service;

@@ -1,6 +1,7 @@
 package com.afgicafe.ecommerce.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ public class Role extends BaseEntity{
     @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "permission_role",
             joinColumns = @JoinColumn(name = "role_id"),

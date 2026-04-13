@@ -5,6 +5,7 @@ import com.afgicafe.ecommerce.dto.request.UpdateUserRequest;
 import com.afgicafe.ecommerce.dto.response.UserResponse;
 import com.afgicafe.ecommerce.helper.ApiResponse;
 import com.afgicafe.ecommerce.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "Users")
 public class UserController {
 
     private final UserService service;
